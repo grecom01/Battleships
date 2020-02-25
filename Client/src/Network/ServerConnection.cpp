@@ -151,52 +151,43 @@ void ServerConnection::send()
 
 void ServerConnection::receive()
 {
-	//sf::SocketSelector selector;
-	//selector.add(m_socket);
-
 	while (m_connected) {
-		//if (selector.wait()) {
-			//if (selector.isReady(m_socket)) {
-				//std::cout << "Receiving packet from server" << std::endl;
-				sf::Socket::Status receiveStatus = m_socket.receive(m_receivePacket);
+		sf::Socket::Status receiveStatus = m_socket.receive(m_receivePacket);
 
-				if (receiveStatus == sf::Socket::Done) {
-					sf::Int8 messageType = -1;
-					m_receivePacket >> messageType;
+		if (receiveStatus == sf::Socket::Done) {
+			sf::Int8 messageType = -1;
+			m_receivePacket >> messageType;
 
-					switch ((ServerMessageType)messageType) {
-						case ServerMessageType::LoginResult:
-							processLoginResultMessage();
-							break;
+			switch ((ServerMessageType)messageType) {
+				case ServerMessageType::LoginResult:
+					processLoginResultMessage();
+					break;
 
-						case ServerMessageType::FirstMove:
-							processFirstMoveMessage();
-							break;
+				case ServerMessageType::FirstMove:
+					processFirstMoveMessage();
+					break;
 
-						case ServerMessageType::AttackResult:
-							processAttackResultMessage();
-							break;
+				case ServerMessageType::AttackResult:
+					processAttackResultMessage();
+					break;
 
-						case ServerMessageType::EnemyAttack:
-							processEnemyAttackMessage();
-							break;
+				case ServerMessageType::EnemyAttack:
+					processEnemyAttackMessage();
+					break;
 
-						case ServerMessageType::GameOver:
-							processGameOverMessage();
-							break;
+				case ServerMessageType::GameOver:
+					processGameOverMessage();
+					break;
 
-						default:
-							std::cout << "Received invalid message" << std::endl;
-							break;
-					}
-				}
-				else if (receiveStatus == sf::Socket::Error) {
-					std::cout << "Error: Could not receive packet" << std::endl;
-					// TODO: handle server termination
-				}
-			//}
-			//m_receivePacket.clear();
-		//}
+				default:
+					std::cout << "Received invalid message" << std::endl;
+					break;
+			}
+		}
+		else if (receiveStatus == sf::Socket::Error) {
+			std::cout << "Error: Could not receive packet" << std::endl;
+			// TODO: handle server termination
+		}
 	}
 }
 
